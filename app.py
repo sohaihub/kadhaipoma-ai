@@ -5,21 +5,18 @@ import io
 import wave
 import google.generativeai as genai
 
-
-# Gemini API key (your provided key)
+# Gemini API key
 GEMINI_API_KEY = "AIzaSyDDHNQB3EyoVsmAZi6Gh-aaEyVFl-F7-bI"
 
 # Sarvam TTS API details
 API_KEY_SARVAM = "sk_v4ka9u7i_b869GOmkZ5PdM5M6JR1GyZHw"
 API_URL_SARVAM = "https://api.sarvam.ai/text-to-speech"
-MAX_CHARS = 100  # Adjust as per API limit
+MAX_CHARS = 100  # Sarvam API limit
 
-# Initialize Gemini client
-genai.configure(api_key=GEMINI_API_KEY)  # ✅ correct
-
+# Configure Gemini
+genai.configure(api_key=GEMINI_API_KEY)
 
 def chunk_text(text, size):
-    """Split text into chunks without breaking words."""
     words = text.strip().split()
     chunks = []
     current_chunk = ""
@@ -73,17 +70,15 @@ def generate_story(title, language):
     prompt = (
         f"Generate a {language} story titled '{title}', "
         "with sentences separated by commas, duration about 2 to 3 minutes, "
-        "and end with a moral."
-        "include only the story and moral at the end, no translation or explanation."
+        "and end with a moral. "
+        "Include only the story and moral at the end, no translation or explanation."
     )
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=[prompt]
-    )
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
     return response.text.strip()
 
 def main():
-    st.title("Kadhaipoma.ai - Streamlit Version")
+    st.title("📖 Kadhaipoma.ai - Streamlit Story Generator")
 
     title = st.text_input("Enter Story Title:")
     language = st.selectbox("Select Language", ["English", "Tamil"])
@@ -103,10 +98,10 @@ def main():
             return
 
         try:
-            with st.spinner("Generating story..."):
+            with st.spinner("🪄 Generating story..."):
                 story_text = generate_story(title, language)
 
-            st.markdown("### Generated Story:")
+            st.markdown("### 📝 Generated Story:")
             st.write(story_text)
 
             chunks = chunk_text(story_text, MAX_CHARS)
@@ -116,7 +111,7 @@ def main():
             lang_code, speaker = lang_map[language]
 
             for i, chunk in enumerate(chunks, 1):
-                st.write(f"Processing audio chunk {i} of {len(chunks)}...")
+                st.write(f"🎙️ Processing audio chunk {i} of {len(chunks)}...")
                 audio_b64 = call_sarvam_tts(chunk, lang_code, speaker)
                 audio_chunks.append(audio_b64)
 
@@ -127,7 +122,7 @@ def main():
             st.download_button("📥 Download Audio", merged_audio, file_name="story_audio.wav", mime="audio/wav")
 
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"🚨 Error: {e}")
 
 if __name__ == "__main__":
     main()
