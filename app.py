@@ -3,7 +3,8 @@ import requests
 import base64
 import io
 import wave
-from google import genai
+import google.generativeai as genai
+
 
 # Gemini API key (your provided key)
 GEMINI_API_KEY = "AIzaSyDDHNQB3EyoVsmAZi6Gh-aaEyVFl-F7-bI"
