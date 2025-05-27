@@ -81,7 +81,7 @@ def generate_story(title, language):
     return response.text.strip()
 
 def main():
-    st.title("📚 Gemini Storyteller + Sarvam TTS")
+    st.title("Kadhaipoma.ai - Streamlit Version")
 
     title = st.text_input("Enter Story Title:")
     language = st.selectbox("Select Language", ["English", "Tamil"])
