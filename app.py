@@ -15,7 +15,8 @@ API_URL_SARVAM = "https://api.sarvam.ai/text-to-speech"
 MAX_CHARS = 100  # Adjust as per API limit
 
 # Initialize Gemini client
-client = genai.Client(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)  # ✅ correct
+
 
 def chunk_text(text, size):
     """Split text into chunks without breaking words."""
